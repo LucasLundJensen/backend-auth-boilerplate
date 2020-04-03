@@ -1,0 +1,35 @@
+{
+  "name": "backauth-boilerplate",
+  "version": "1.0.0",
+  "description": "A simple boilerplate for authentication",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LucasLundJensen/backend-auth-boilerplate.git"
+  },
+  "keywords": [
+    "Nodejs",
+    "boilerplate",
+    "Passportjs",
+    "Express",
+    "JavascJavascript"
+  ],
+  "author": "Lucas Lund Jensen",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/LucasLundJensen/backend-auth-boilerplate/issues"
+  },
+  "homepage": "https://github.com/LucasLundJensen/backend-auth-boilerplate#readme",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "mariadb": "^2.3.1",
+    "passport": "^0.4.1",
+    "passport-jwt": "^4.0.0",
+    "passport-local": "^1.0.0",
+    "sequelize": "^5.21.5"
+  }
+}
