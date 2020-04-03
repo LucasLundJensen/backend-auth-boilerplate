@@ -1,6 +1,8 @@
 const User = require('../models/user.model');
+const jwt = require('jsonwebtoken');
+require('dotenv').config();
 
-async function getUser(req, res) {
+async function getUserById(req, res) {
     try {
         const id = req.params.id;
     
@@ -15,6 +17,52 @@ async function getUser(req, res) {
     }
 }
 
+async function getAllUsers(req, res) {
+    try {
+        const users = await User.find();
+        if (!users) {
+            res.status(404).json({ message: 'No users found' });
+        } else {
+            res.status(200).json({ users });
+        }
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+
+async function createUser(req, res) {
+    try {
+        const { username, password, email } = req.body;
+
+        const newUser = await User.create({
+            username,
+            password,
+            email
+        });
+
+        if (!newUser) {
+            res.status(400).json({ message: 'Something went wrong in creation of user '});
+        } else {
+            
+            const token = jwt.sign({
+                iss: 'webapp',
+                sub: newUser.id
+            }, process.env.SECRET );
+            
+            res.status(201).json({
+                userId: newUser.id,
+                token: 'JWT ' + token
+            });
+        }
+
+    } catch (err) {
+        console.log(err);
+    }
+}
+
 module.exports = {
-    getUser
+    getUserById,
+    getAllUsers,
+    createUser
 }
