@@ -14,6 +14,7 @@ async function getUserById(req, res) {
         }
     } catch (err) {
         console.log(err);
+        res.status(500).json({ message: 'Internal Server Error '});
     }
 }
 
@@ -27,6 +28,7 @@ async function getAllUsers(req, res) {
         }
     } catch (err) {
         console.log(err);
+        res.status(500).json({ message: 'Internal Server Error '});
     }
 }
 
@@ -58,11 +60,32 @@ async function createUser(req, res) {
 
     } catch (err) {
         console.log(err);
+        res.status(500).json({ message: 'Internal Server Error '});
+    }
+}
+
+async function deleteUserById(req, res){
+    try {
+
+        const id = req.params.id;
+
+        const deletedUser = await User.destroy({ where: { id } });
+
+        if (!deletedUser) {
+            res.status(404).json({ message: 'No user found to delete' });
+        } else {
+            res.status(200).json({ message: `User ${id} has been deleted.` });
+        }
+
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ message: 'Internal Server Error '});
     }
 }
 
 module.exports = {
     getUserById,
     getAllUsers,
-    createUser
+    createUser,
+    deleteUserById
 }
