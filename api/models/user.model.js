@@ -23,5 +23,11 @@ const User = sequelize.define('user', {
     }
 });
 
+User.validPassword = function(password) {
+    const valid = bcrypt.compare(password, user.password);
+    if (valid) return true;
+    else return false;
+}
+
 
 module.exports = User;

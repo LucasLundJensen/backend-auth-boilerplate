@@ -37,6 +37,7 @@ async function createUser(req, res) {
     try {
         const { username, password, email } = req.body;
 
+        // Add validation if the user already exists.
         const newUser = await User.create({
             username,
             password,
