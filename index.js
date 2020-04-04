@@ -8,7 +8,7 @@ require('dotenv').config();
 const passport = require('passport')
 require('./passport');
 
-User.sync({ force: true });
+User.sync({ force: false });
 
 app.use(bodyParser.json({}));
 app.use(passport.initialize());

@@ -6,12 +6,13 @@ const AuthController = require('../controllers/auth.controller');
 const UserController = require('../controllers/user.controller');
 require('dotenv').config();
 
-router.get('/register', async function(req, res) {
+router.post('/register', async function(req, res) {
     await UserController.createUser(req, res);
 })
 
 router.post('/login', function(req, res) {
     passport.authenticate("local", { session: false }, (err, user, info) => {
+        
         if (err || !user) {
             return res.status(400).json({
                 message: info ? info.message : 'Login failed'
@@ -25,7 +26,7 @@ router.post('/login', function(req, res) {
 
             const token = jwt.sign({
                 iss: 'webapp',
-                sub: newUser.id
+                sub: user.id
             }, process.env.SECRET );
             
             return res.json({
