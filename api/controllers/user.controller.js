@@ -6,7 +6,14 @@ async function getUserById(req, res) {
     try {
         const id = req.params.id;
     
-        const user = await User.findOne({where: { id }});
+        const user = await User.findOne({
+            where: { id },
+            attributes: [
+                "id",
+                "username",
+                "email",
+            ]
+        });
         if (!user) {
             res.status(404).json({ message: 'No user found. '});
         } else {
@@ -20,7 +27,13 @@ async function getUserById(req, res) {
 
 async function getAllUsers(req, res) {
     try {
-        const users = await User.find();
+        const users = await User.find({
+            attributes: [
+                "id",
+                "username",
+                "email",
+            ]
+        });
         if (!users) {
             res.status(404).json({ message: 'No users found' });
         } else {
