@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
+const passport = require('passport');
 const UserController = require('../controllers/user.controller');
 
-router.get('/:id', async function(req, res) {
+router.get('/:id', passport.authenticate("jwt", {session: false}), async function(req, res) {
     await UserController.getUserById(req, res);
 });
 
