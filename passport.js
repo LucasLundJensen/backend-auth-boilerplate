@@ -12,12 +12,12 @@ passport.use(new LocalStrategy(
     { usernameField: "email" },
     async(email, password, done) => {
         try {
-            const validated = UserLoginSchema.validate(email, password);
+            const validated = UserLoginSchema.validate({email: email, password: password});
             if(validated.error) {
                 console.log("Login validation failed");
                 return done(null, false);
             }
-            const user = await User.findOne({ where: { email }});
+            const user = await User.findOne({ where: { email: email }});
             if(!user) return done(null, false);
             const passwordMatch = await bcrypt.compare(password, user.password);
             if(!passwordMatch) return done(null, false);
