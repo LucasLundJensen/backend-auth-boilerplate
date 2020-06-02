@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser')
+const cors = require('cors');
 const app = express();
 const User = require('./api/models/user.model');
 const UserRoute = require('./api/routes/user.route');
@@ -7,6 +8,8 @@ const AuthRoute = require('./api/routes/auth.route');
 require('dotenv').config();
 const passport = require('passport')
 require('./passport');
+
+app.use(cors());
 
 User.sync({ force: false });
 

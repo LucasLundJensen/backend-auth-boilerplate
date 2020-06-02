@@ -1,4 +1,5 @@
 const User = require('../models/user.model');
+const { UserCreateSchema } = require('../schemas/user.schema');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
@@ -50,7 +51,20 @@ async function createUser(req, res) {
     try {
         const { username, password, email } = req.body;
 
-        // Add validation if the user already exists.
+        const validated = UserCreateSchema.validate({ username, password, email });
+
+        if(validated.error) {
+            res.status(400).json({ message: 'Input does not follow validation rules.'});
+            console.log("Register Validation failed");
+            return;
+        }
+
+        const emailExists = await User.findOne({where: { email }});
+        if(emailExists) {
+            res.status(400).json({ message: 'Account with that email already exists' });
+            return;
+        };
+
         const newUser = await User.create({
             username,
             password,
@@ -59,18 +73,18 @@ async function createUser(req, res) {
 
         if (!newUser) {
             res.status(400).json({ message: 'Something went wrong in creation of user '});
-        } else {
-            
-            const token = jwt.sign({
-                iss: 'webapp',
-                sub: newUser.id
-            }, process.env.SECRET );
-            
-            res.status(201).json({
-                userId: newUser.id,
-                token: 'JWT ' + token
-            });
+            return;
         }
+
+        const token = jwt.sign({
+            iss: 'webapp',
+            sub: newUser.id
+        }, process.env.SECRET );
+        
+        res.status(201).json({
+            userId: newUser.id,
+            token: 'JWT ' + token
+        });
 
     } catch (err) {
         console.log(err);
@@ -86,7 +100,7 @@ async function deleteUserById(req, res){
         const deletedUser = await User.destroy({ where: { id } });
 
         if (!deletedUser) {
-            res.status(404).json({ message: 'No user found to delete' });
+            res.status(403).json({ message: 'No user found to delete' });
         } else {
             res.status(200).json({ message: `User ${id} has been deleted.` });
         }
