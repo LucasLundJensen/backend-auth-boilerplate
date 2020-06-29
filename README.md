@@ -1,7 +1,7 @@
 # backend-auth-boilerplate
 A boilerplate for authentication with NodeJS and Passport.
 
-###.env example
+### .env example
 ```
 DB_NAME=db_name
 DB_USER=db_user
