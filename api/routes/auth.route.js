@@ -27,11 +27,18 @@ router.post('/login', function(req, res) {
                 iss: 'webapp',
                 sub: user.id
             }, process.env.SECRET );
-            
-            return res.json({
+
+            res.setHeader(
+                "Set-Cookie",
+                `tk=${token}; httpOnly`
+            );
+
+            res.json({
                 userId: user.id,
                 token: "JWT " + token
             });
+
+            res.status(200).end();
         });
     })(req, res);
 });

@@ -3,6 +3,11 @@ const { UserCreateSchema } = require('../schemas/user.schema');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
+/**
+ * Get the user specified by the ID in req.params.id.
+ * @param {*} req 
+ * @param {*} res 
+ */
 async function getUserById(req, res) {
     try {
         const id = req.params.id;
@@ -26,6 +31,11 @@ async function getUserById(req, res) {
     }
 }
 
+/**
+ * Get all users
+ * @param {*} req 
+ * @param {*} res 
+ */
 async function getAllUsers(req, res) {
     try {
         const users = await User.find({
@@ -46,7 +56,11 @@ async function getAllUsers(req, res) {
     }
 }
 
-
+/**
+ * Create a user based on username, password and email in the req.body.
+ * @param {*} req 
+ * @param {*} res 
+ */
 async function createUser(req, res) {
     try {
         const { username, password, email } = req.body;
@@ -92,6 +106,11 @@ async function createUser(req, res) {
     }
 }
 
+/**
+ * Delete a user specified by the ID in the req.params.id
+ * @param {*} req 
+ * @param {*} res 
+ */
 async function deleteUserById(req, res){
     try {
 
