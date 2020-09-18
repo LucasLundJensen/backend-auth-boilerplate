@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 const UserController = require('../controllers/user.controller');
 require('dotenv').config();
 
-router.post('/register', async function(req, res) {
+router.post('/register', async (req, res) => {
     await UserController.createUser(req, res);
 })
 
@@ -23,14 +23,23 @@ router.post('/login', function(req, res) {
                 message: err
             });
 
+            let date = new Date();
+            date.setDate(date.getDate() + 1);
+            date = date.getTime();
+
             const token = jwt.sign({
                 iss: 'webapp',
-                sub: user.id
+                sub: user.id,
+                exp: date
             }, process.env.SECRET );
 
-            res.setHeader(
-                "Set-Cookie",
-                `tk=${token}; httpOnly`
+            res.cookie(
+                'tk', token,
+                {
+                    httpOnly: true,
+                    maxAge: 172800000, // This is technically two days in MS, but it correlates to one?
+                    secure: process.env.NODE_ENV === 'production' ? true : false
+                }
             );
 
             res.json({
@@ -42,5 +51,19 @@ router.post('/login', function(req, res) {
         });
     })(req, res);
 });
+
+router.post('/logout', passport.authenticate("jwt", { session: false }),  async (req, res) => {
+    if(req.cookies.tk) {
+        res.cookie(
+            'tk',
+            'undefined',
+            {
+                maxAge: 0,
+                httpOnly: true
+            }
+        );
+    };
+    res.status(200).end();
+} )
 
 module.exports = router;

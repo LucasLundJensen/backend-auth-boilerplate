@@ -2,7 +2,6 @@ const passport = require('passport');
 const passportJWT = require('passport-jwt');
 const bcrypt = require('bcrypt');
 const LocalStrategy = require('passport-local').Strategy;
-const ExtractJWT = passportJWT.ExtractJwt;
 const JWTStrategy = passportJWT.Strategy;
 const User = require('./api/models/user.model');
 const { UserLoginSchema } = require('./api/schemas/user.schema');
@@ -31,12 +30,12 @@ passport.use(new LocalStrategy(
 
 passport.use(new JWTStrategy (
     {
-        jwtFromRequest: ExtractJWT.fromAuthHeaderWithScheme("jwt"),
+        jwtFromRequest: req => req.cookies.tk,
         secretOrKey: process.env.SECRET
     },
-    async(jwtPayload, callback) => {
+    async (jwtPayload, callback) => {
          const user = await User.findOne({ where: { id: jwtPayload.sub }});
-         if(!user) return callback("No user found");
+         if(!user) return callback(null, false);
          return callback(null, user);
     }
 ));
